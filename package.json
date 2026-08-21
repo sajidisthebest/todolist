@@ -1,0 +1,25 @@
+{
+  "name": "taskflow-pro",
+  "version": "1.0.0",
+  "description": "TaskFlow Pro - Aesthetic Task Studio & Focus Suite",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir=."
+  },
+  "keywords": [
+    "todo",
+    "task-manager",
+    "kanban",
+    "pomodoro",
+    "focus",
+    "productivity"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sajidisthebest/todolist.git"
+  },
+  "author": "Sajid",
+  "license": "MIT"
+}

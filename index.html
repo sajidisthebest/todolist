@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TaskFlow Pro — Modern Task Studio & Focus Suite</title>
+  <meta name="description"
+    content="A supercharged, aesthetic task studio with Linear-inspired design, interactive Kanban boards, calendar, Pomodoro focus timer, subtasks, and productivity analytics.">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <!-- Dynamic Atmospheric Aurora Mesh Background -->
+  <div class="aurora-container">
+    <div class="aurora-blob blob-1"></div>
+    <div class="aurora-blob blob-2"></div>
+    <div class="aurora-blob blob-3"></div>
+  </div>
+
+  <!-- Sidebar Overlay (Behind Sidebar on Mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation (Modern & Compact Linear/Raycast Style) -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Brand Header -->
+      <div class="sidebar-header-row">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+          </div>
+          <span class="brand-title">TaskFlow <span class="brand-badge">PRO</span></span>
+        </div>
+        <button class="sidebar-close-btn" id="sidebar-close-btn" title="Close Sidebar">&times;</button>
+      </div>
+
+      <!-- Smart Views Section -->
+      <div class="sidebar-section" id="sidebar-section-smart-views">
+        <div class="sidebar-title section-collapsible-header" onclick="window.app.toggleSidebarSection('smart-views')" title="Toggle Smart Views">
+          <span class="section-title-text">Smart Views</span>
+          <span class="section-chevron">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </span>
+        </div>
+        <div class="section-collapsible-content">
+          <ul class="sidebar-nav">
+            <li>
+              <button class="filter-nav-btn active" data-filter="all">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>All Tasks</span>
+                <span class="nav-count" id="count-all">0</span>
+              </button>
+            </li>
+            <li>
+              <button class="filter-nav-btn" data-filter="today">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 14 14"></polyline>
+                </svg>
+                <span>Due Today</span>
+                <span class="nav-count" id="count-today">0</span>
+              </button>
+            </li>
+            <li>
+              <button class="filter-nav-btn" data-filter="week" title="View tasks from Saturday to Friday for this week">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                  <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path>
+                </svg>
+                <span>This Week (Sat–Fri)</span>
+                <span class="nav-count" id="count-week">0</span>
+              </button>
+            </li>
+            <li>
+              <button class="filter-nav-btn" data-filter="upcoming">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Upcoming</span>
+                <span class="nav-count" id="count-upcoming">0</span>
+              </button>
+            </li>
+            <li>
+              <button class="filter-nav-btn" data-filter="overdue">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                  </path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span>Overdue</span>
+                <span class="nav-count overdue-badge" id="count-overdue">0</span>
+              </button>
+            </li>
+            <li>
+              <button class="filter-nav-btn" data-filter="starred">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                  </polygon>
+                </svg>
+                <span>Starred</span>
+                <span class="nav-count" id="count-starred">0</span>
+              </button>
+            </li>
+            <li>
+              <button class="filter-nav-btn" data-filter="completed">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span>Completed</span>
+                <span class="nav-count" id="count-completed">0</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Categories / Workspaces -->
+      <div class="sidebar-section" id="sidebar-section-workspaces">
+        <div class="sidebar-title section-collapsible-header" onclick="window.app.toggleSidebarSection('workspaces')" title="Toggle Workspaces">
+          <span class="section-title-text">Workspaces</span>
+          <div class="section-header-actions">
+            <button type="button" class="btn-add-cat" onclick="event.stopPropagation(); window.app.openCategoryModal()" title="Add Category">+</button>
+            <span class="section-chevron">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+        </div>
+        <div class="section-collapsible-content">
+          <ul class="categories-list" id="categories-list">
+            <!-- Populated dynamically -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tags Section -->
+      <div class="sidebar-section" id="sidebar-tags-section">
+        <div class="sidebar-title section-collapsible-header" onclick="window.app.toggleSidebarSection('tags')" title="Toggle Tags">
+          <span class="section-title-text">Tags</span>
+          <div class="section-header-actions">
+            <button type="button" class="btn-clear-tag" id="btn-clear-tag" onclick="event.stopPropagation(); window.app.filterByTag('all')"
+              title="Clear active tag filter" style="display: none;">✕ Clear</button>
+            <span class="section-chevron">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+        </div>
+        <div class="section-collapsible-content">
+          <div class="sidebar-tags-container" id="sidebar-tags-list">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Portability & Settings Utility -->
+      <div class="sidebar-footer" id="sidebar-section-tools">
+        <div class="sidebar-footer-title section-collapsible-header" onclick="window.app.toggleSidebarSection('tools')" title="Toggle Tools &amp; Sync">
+          <span class="section-title-text">Tools &amp; Sync</span>
+          <span class="section-chevron">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </span>
+        </div>
+        <div class="section-collapsible-content">
+          <div class="sidebar-footer-grid">
+            <button class="sidebar-footer-btn" onclick="window.gcal.openModal()" title="Google Calendar Sync">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Google Cal</span>
+            </button>
+            <button class="sidebar-footer-btn" onclick="window.taskStore.exportJSON()" title="Backup JSON">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Backup</span>
+            </button>
+            <button class="sidebar-footer-btn" onclick="window.taskStore.exportCSV()" title="Export CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span>CSV</span>
+            </button>
+            <button class="sidebar-footer-btn" onclick="window.app.triggerJSONImport()" title="Restore Backup">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Restore</span>
+            </button>
+            <button class="sidebar-footer-btn" onclick="window.app.resetSampleData()" title="Load Demo Tasks">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              <span>Demo Data</span>
+            </button>
+            <button class="sidebar-footer-btn danger-btn" onclick="window.app.clearAllData()" title="Clear All Tasks">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Clear All</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-offline-chip">
+        <span class="offline-dot"></span>
+        <span>100% Offline &amp; Private</span>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main class="main-wrapper">
+      <!-- Top Sticky Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" title="Open Navigation Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <button class="icon-btn desktop-sidebar-toggle-btn" id="desktop-sidebar-toggle-btn" onclick="window.app.toggleSidebar()" title="Toggle Sidebar (Ctrl+\)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+          </button>
+          <div class="search-box">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-input" class="search-input" placeholder="Search tasks, subtasks, #tags...">
+            <span class="search-shortcut">/</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Focus Mode Trigger Button -->
+          <button class="btn btn-focus-glow" id="header-focus-mode-btn" onclick="window.pomodoro.promptFocusMode()"
+            title="Enter Single-Task Focus Mode (F)">
+            <span>🎯</span>
+            <span class="focus-btn-text">Focus Mode</span>
+          </button>
+
+          <div class="streak-pill" id="header-streak-badge" title="Consecutive day streak">
+            🔥 <span>1 day streak</span>
+          </div>
+
+          <button class="icon-btn" id="sound-toggle-btn" title="Toggle Sound Feedback">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+
+          <button class="icon-btn" id="theme-toggle-btn" title="Cycle Themes (Dark, Midnight, Cyber, Light)">
+            <span class="theme-icon">🌙</span>
+          </button>
+
+          <button class="icon-btn" id="toggle-pomodoro-btn" title="Open Focus Timer (P)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </button>
+
+          <button class="icon-btn" onclick="window.app.openShortcutsModal()" title="Keyboard Shortcuts (?)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+              <line x1="6" y1="8" x2="6" y2="8"></line>
+              <line x1="10" y1="8" x2="10" y2="8"></line>
+              <line x1="14" y1="8" x2="14" y2="8"></line>
+              <line x1="18" y1="8" x2="18" y2="8"></line>
+              <line x1="6" y1="12" x2="6" y2="12"></line>
+              <line x1="18" y1="12" x2="18" y2="12"></line>
+              <line x1="8" y1="16" x2="16" y2="16"></line>
+            </svg>
+          </button>
+
+          <!-- Master Admin Panel Trigger Badge -->
+          <button class="btn btn-admin-badge" id="header-admin-btn" onclick="window.adminDashboard.open()" title="Master Admin Console" style="display: none;">
+            <span>🛡️ Admin Panel</span>
+          </button>
+
+          <!-- User Account / Profile Button -->
+          <button class="user-account-btn" id="header-user-btn" onclick="window.app.openAuthModal()" title="Account & Profile">
+            <span class="user-avatar-badge" id="header-user-avatar" style="background: #64748b;">G</span>
+            <span class="user-name-label" id="header-user-name">Guest</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Hero Greeting & Focus Vibe -->
+      <section class="hero-greeting-bar">
+        <div class="hero-text-group">
+          <h2><span id="greeting-text">Good day</span>, Focus Champion ✨</h2>
+          <p class="hero-subtitle" id="greeting-subtitle">Your mission control for peak productivity and deep flow.</p>
+        </div>
+        <div class="live-time-chip">
+          <span style="color: var(--accent-primary);">●</span>
+          <span id="live-time-clock">12:00 PM</span>
+        </div>
+      </section>
+
+      <!-- View Toolbar: Quick Add + Controls Bar -->
+      <section class="view-toolbar">
+        <!-- Quick Add Bar -->
+        <div class="quick-add-container">
+          <input type="text" id="quick-add-input" class="quick-add-input"
+            placeholder="⚡ Add a new task quickly and press Enter...">
+          <button class="btn btn-primary btn-sm" id="quick-add-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add</span>
+          </button>
+        </div>
+
+        <!-- Controls Bar: Views, Filters, Sort, Create Button -->
+        <div class="controls-bar">
+          <!-- View Switcher -->
+          <div class="view-tabs">
+            <button class="view-tab-btn active" data-view="list">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              <span>List</span>
+            </button>
+            <button class="view-tab-btn" data-view="kanban">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="15" y1="3" x2="15" y2="21"></line>
+              </svg>
+              <span>Kanban</span>
+            </button>
+            <button class="view-tab-btn" data-view="calendar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Calendar</span>
+            </button>
+            <button class="view-tab-btn" data-view="analytics">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              <span>Analytics</span>
+            </button>
+          </div>
+
+          <!-- Secondary Filters & Actions -->
+          <div class="filters-group">
+            <!-- Group By Selector -->
+            <select id="groupby-select" class="select-filter" title="Group Tasks By">
+              <option value="none">🔀 Group: None</option>
+              <option value="tag">🏷️ Group by Tag</option>
+              <option value="priority">⚡ Group by Priority</option>
+              <option value="category">📁 Group by Workspace</option>
+              <option value="dueDate">📅 Group by Due Date</option>
+              <option value="status">📊 Group by Status</option>
+            </select>
+
+            <!-- Tag Filter Selector -->
+            <select id="tag-filter-select" class="select-filter" title="Filter by Tag">
+              <option value="all">🏷️ All Tags</option>
+            </select>
+
+            <!-- Priority Filter Selector -->
+            <select id="priority-filter-select" class="select-filter" title="Filter by Priority">
+              <option value="all">All Priorities</option>
+              <option value="urgent">🔴 Urgent</option>
+              <option value="high">🟠 High</option>
+              <option value="medium">🔵 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+
+            <select id="sort-select" class="select-filter" title="Sort Tasks">
+              <option value="dueDate-asc">📅 Due Date (Soonest)</option>
+              <option value="dueDate-desc">📅 Due Date (Furthest)</option>
+              <option value="priority-desc">⚡ Priority (Highest)</option>
+              <option value="created-desc">🕒 Recently Added</option>
+              <option value="title-asc">🔤 Alphabetical (A-Z)</option>
+            </select>
+
+            <button class="btn btn-primary" onclick="window.app.openTaskModal()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>New Task</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Panels Container -->
+      <section class="content-body">
+        <!-- 1. List View Panel -->
+        <div class="view-panel active" id="view-list">
+          <div id="list-tasks-container">
+            <!-- Dynamically Rendered -->
+          </div>
+        </div>
+
+        <!-- 2. Kanban Board Panel -->
+        <div class="view-panel" id="view-kanban">
+          <div id="kanban-tasks-container">
+            <!-- Dynamically Rendered -->
+          </div>
+        </div>
+
+        <!-- 3. Calendar View Panel -->
+        <div class="view-panel" id="view-calendar">
+          <div id="calendar-container">
+            <!-- Dynamically Rendered -->
+          </div>
+        </div>
+
+        <!-- 4. Analytics Dashboard Panel -->
+        <div class="view-panel" id="view-analytics">
+          <div id="analytics-container">
+            <!-- Dynamically Rendered -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar (Visible on Mobile) -->
+  <nav class="mobile-bottom-nav">
+    <button class="bottom-nav-btn active" data-bottom-view="list" onclick="window.app.switchView('list')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      <span>Tasks</span>
+    </button>
+    <button class="bottom-nav-btn" data-bottom-view="kanban" onclick="window.app.switchView('kanban')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="9" y1="3" x2="9" y2="21"></line>
+        <line x1="15" y1="3" x2="15" y2="21"></line>
+      </svg>
+      <span>Kanban</span>
+    </button>
+    <button class="bottom-nav-add-btn" onclick="window.app.openTaskModal()" title="Create New Task">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+    <button class="bottom-nav-btn" data-bottom-view="calendar" onclick="window.app.switchView('calendar')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span>Calendar</span>
+    </button>
+    <button class="bottom-nav-btn" data-bottom-view="analytics" onclick="window.app.switchView('analytics')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+      <span>Stats</span>
+    </button>
+  </nav>
+
+  <!-- Pomodoro Focus Timer Drawer -->
+  <aside class="pomodoro-drawer" id="pomodoro-drawer">
+    <div class="pomo-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span>⏱️</span>
+        <h3>Focus Studio</h3>
+      </div>
+      <button class="btn-close-modal" id="close-pomodoro-btn">&times;</button>
+    </div>
+
+    <!-- Mode Selector -->
+    <div class="pomo-modes">
+      <button class="pomo-mode-btn active" data-mode="work">Focus (25m)</button>
+      <button class="pomo-mode-btn" data-mode="shortBreak">Break (5m)</button>
+      <button class="pomo-mode-btn" data-mode="longBreak">Long (15m)</button>
+    </div>
+
+    <!-- Circular Progress Timer -->
+    <div class="pomo-timer-display-area">
+      <svg class="pomo-svg" width="200" height="200" viewBox="0 0 200 200">
+        <circle class="pomo-bg-circle" cx="100" cy="100" r="90"></circle>
+        <circle class="pomo-fg-circle" id="pomo-progress-circle" cx="100" cy="100" r="90"></circle>
+      </svg>
+      <div class="pomo-text-wrapper">
+        <span class="pomo-time" id="pomo-time-display">25:00</span>
+        <span class="pomo-label" id="pomo-mode-label">Focus Time</span>
+      </div>
+    </div>
+
+    <!-- Linked Task -->
+    <div class="pomo-task-selector">
+      <label
+        style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:4px; display:block;">Active
+        Task Link</label>
+      <select id="pomo-task-select" class="pomo-select">
+        <option value="">-- No specific task --</option>
+      </select>
+    </div>
+
+    <!-- Background Ambient Sound Generator -->
+    <div class="pomo-ambient-row">
+      <span>🌧️ Ambient Audio:</span>
+      <select id="pomo-ambient-select" class="pomo-select" style="width: 140px; padding: 4px 8px;">
+        <option value="none">Off</option>
+        <option value="rain">Soothing Rain</option>
+        <option value="white">White Noise</option>
+      </select>
+    </div>
+
+    <!-- Controls -->
+    <div class="pomo-controls">
+      <button class="btn btn-primary pomo-btn-main" id="pomo-start-pause-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span>Start Focus</span>
+      </button>
+      <button class="btn btn-secondary" id="pomo-reset-btn" title="Reset Timer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Session tracker dots -->
+    <div class="pomo-session-dots" id="pomo-session-dots">
+      <span class="session-dot"></span>
+      <span class="session-dot"></span>
+      <span class="session-dot"></span>
+      <span class="session-dot"></span>
+    </div>
+  </aside>
+
+  <!-- Floating Active Pomodoro Mini-Badge -->
+  <div class="pomo-floating-badge hidden" id="pomo-floating-badge" onclick="window.pomodoro.openDrawer()">
+    <span>🍅</span>
+    <span class="badge-time">25:00</span>
+  </div>
+
+  <!-- Create / Edit Task Modal -->
+  <div class="modal-backdrop" id="task-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-title">Create New Task</h3>
+        <button class="btn-close-modal" onclick="window.app.closeTaskModal()">&times;</button>
+      </div>
+
+      <form class="modal-form" onsubmit="window.app.handleTaskFormSubmit(event)">
+        <div class="form-group">
+          <label for="modal-task-title">Task Title *</label>
+          <input type="text" id="modal-task-title" class="form-input" placeholder="What needs to be accomplished?"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="modal-task-desc">Description & Notes</label>
+          <textarea id="modal-task-desc" class="form-textarea"
+            placeholder="Add additional details, links, or context..."></textarea>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="modal-task-category">Project / Workspace</label>
+            <select id="modal-task-category" class="form-select">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-task-priority">Priority</label>
+            <select id="modal-task-priority" class="form-select">
+              <option value="urgent">🔴 Urgent</option>
+              <option value="high">🟠 High</option>
+              <option value="medium" selected>🔵 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="modal-task-status">Status</label>
+            <select id="modal-task-status" class="form-select">
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="review">In Review</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-task-poms">Estimated Pomodoros (25m)</label>
+            <input type="number" id="modal-task-poms" class="form-input" min="1" max="20" value="1">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="modal-task-duedate">Due Date</label>
+            <input type="date" id="modal-task-duedate" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="modal-task-duetime">Due Time</label>
+            <input type="time" id="modal-task-duetime" class="form-input">
+          </div>
+        </div>
+
+        <!-- Subtasks Builder -->
+        <div class="form-group">
+          <label>Subtasks & Checklist</label>
+          <div class="subtasks-input-row">
+            <input type="text" id="modal-subtask-input" class="form-input" placeholder="Add checklist item..."
+              onkeydown="if(event.key==='Enter'){event.preventDefault();window.app.addModalSubtask();}">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.app.addModalSubtask()">Add</button>
+          </div>
+          <div class="modal-subtasks-list" id="modal-subtasks-list"></div>
+        </div>
+
+        <!-- Tags Builder -->
+        <div class="form-group">
+          <label>Tags (#tag)</label>
+          <div class="tags-input-row">
+            <input type="text" id="modal-tag-input" class="form-input" placeholder="e.g. Design, Frontend, Launch..."
+              onkeydown="if(event.key==='Enter'){event.preventDefault();window.app.addModalTag();}">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.app.addModalTag()">Add Tag</button>
+          </div>
+          <div class="modal-tags-list" id="modal-tags-list"></div>
+        </div>
+
+        <!-- Pin to Top checkbox -->
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="modal-task-pinned">
+            <span>📌 Pin this task to the top</span>
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.app.closeTaskModal()">Cancel</button>
+          <button type="button" class="btn btn-secondary btn-gcal-modal-btn"
+            onclick="window.app.addCurrentModalTaskToGoogleCalendar()"
+            title="Sync this task directly to Google Calendar">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Google Calendar</span>
+          </button>
+          <button type="submit" class="btn btn-primary" id="task-modal-submit-btn">
+            <span id="task-modal-submit-text">Create Task</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create / Manage Category Modal -->
+  <div class="modal-backdrop" id="category-modal">
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3>Workspaces & Projects</h3>
+        <button class="btn-close-modal" onclick="window.app.closeCategoryModal()">&times;</button>
+      </div>
+
+      <form class="modal-form" onsubmit="window.app.handleCategorySubmit(event)">
+        <div class="form-group">
+          <label for="cat-name-input">New Workspace Name *</label>
+          <input type="text" id="cat-name-input" class="form-input" placeholder="e.g. Side Hustle, Growth, Research..."
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="cat-color-input">Color Glow Tag</label>
+          <input type="color" id="cat-color-input" class="form-input" value="#6366f1"
+            style="height: 44px; padding: 4px; cursor: pointer;">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:4px;">+ Add New Project</button>
+
+        <div class="modal-projects-manager">
+          <label
+            style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-top:12px; display:block;">Existing
+            Workspaces</label>
+          <div id="modal-projects-list" class="modal-projects-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="modal-footer" style="padding-top:10px;">
+          <button type="button" class="btn btn-secondary" onclick="window.app.closeCategoryModal()">Done</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts & Customization Studio Modal -->
+  <div class="modal-backdrop" id="shortcuts-modal">
+    <div class="modal-dialog shortcuts-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.3rem;">⌨️</span>
+          <h3>Keyboard Shortcuts &amp; Customization</h3>
+        </div>
+        <button class="btn-close-modal" onclick="window.app.closeShortcutsModal()">&times;</button>
+      </div>
+
+      <div class="shortcuts-modal-body">
+        <p class="shortcuts-intro">Click on any key badge below to rebind and customize your personal workflow shortcut.
+        </p>
+
+        <div class="shortcuts-customizer-list" id="shortcuts-customizer-list">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="shortcut-tip-box">
+          <span>💡 <strong>Tip:</strong> Shortcuts are active everywhere except when typing inside search or input
+            boxes. Escape always closes open dialogs.</span>
+        </div>
+      </div>
+
+      <div class="modal-footer"
+        style="padding: 14px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="window.app.resetAllShortcuts()"
+          title="Reset all keyboard shortcuts to default">
+          <span>↺ Reset Defaults</span>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.app.closeShortcutsModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette Modal (Ctrl+K / Cmd+K) -->
+  <div class="modal-backdrop" id="command-palette">
+    <div class="palette-dialog" onclick="event.stopPropagation()">
+      <div class="palette-search-bar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="palette-input" class="palette-input" placeholder="Type a command or search tasks..."
+          oninput="window.app.filterPaletteCommands(this.value)">
+        <kbd>Esc</kbd>
+      </div>
+      <div class="palette-results" id="palette-results">
+        <!-- Dynamically rendered -->
+      </div>
+      <div class="palette-footer">
+        <span>Navigation: <kbd>↑</kbd> <kbd>↓</kbd></span>
+        <span>Select: <kbd>Enter</kbd></span>
+        <span>Close: <kbd>Esc</kbd></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Right-Click Context Menu -->
+  <div class="custom-context-menu" id="custom-context-menu">
+    <div class="ctx-item" onclick="window.app.executeContextAction('focus')">
+      <span>⏱️</span> <span>Start Focus Session</span>
+    </div>
+    <div class="ctx-item" onclick="window.app.executeContextAction('gcal')">
+      <span>📅</span> <span>Add to Google Calendar</span>
+    </div>
+    <div class="ctx-item" onclick="window.app.executeContextAction('pin')">
+      <span>📌</span> <span id="ctx-pin-text">Pin to Top</span>
+    </div>
+    <div class="ctx-item" onclick="window.app.executeContextAction('duplicate')">
+      <span>📋</span> <span>Duplicate Task</span>
+    </div>
+    <div class="ctx-item" onclick="window.app.executeContextAction('urgent')">
+      <span>🔴</span> <span>Mark as Urgent</span>
+    </div>
+    <div class="ctx-item" onclick="window.app.executeContextAction('edit')">
+      <span>✏️</span> <span>Edit Details</span>
+    </div>
+    <div class="ctx-divider"></div>
+    <div class="ctx-item danger" onclick="window.app.executeContextAction('delete')">
+      <span>🗑️</span> <span>Delete Task</span>
+    </div>
+  </div>
+
+  <!-- Google Calendar Integration Hub Modal -->
+  <div class="modal-backdrop" id="gcal-modal">
+    <div class="modal-dialog gcal-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.4rem;">📅</span>
+          <h3>Google Calendar Integration Hub</h3>
+        </div>
+        <button class="btn-close-modal" onclick="window.gcal.closeModal()">&times;</button>
+      </div>
+
+      <div class="gcal-modal-tabs">
+        <button type="button" class="gcal-tab-btn active" data-tab="sync" onclick="window.gcal.switchTab('sync')">⚡
+          1-Click Sync & Links</button>
+        <button type="button" class="gcal-tab-btn" data-tab="export" onclick="window.gcal.switchTab('export')">💾 iCal /
+          .ICS Export</button>
+        <button type="button" class="gcal-tab-btn" data-tab="api" onclick="window.gcal.switchTab('api')">🔑 API Live
+          Sync (OAuth)</button>
+      </div>
+
+      <!-- Tab 1: 1-Click Individual Sync -->
+      <div class="gcal-tab-panel active" id="gcal-tab-sync">
+        <p class="gcal-tab-desc">Add any scheduled task directly to your Google Calendar in 1 click. Zero setup or API
+          keys needed!</p>
+
+        <div class="gcal-upcoming-header">
+          <span>Scheduled Tasks</span>
+          <button class="btn btn-primary btn-sm" onclick="window.gcal.exportICS()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export All Scheduled (.ics)</span>
+          </button>
+        </div>
+
+        <div class="gcal-upcoming-list" id="gcal-upcoming-tasks">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Tab 2: iCal Export -->
+      <div class="gcal-tab-panel" id="gcal-tab-export">
+        <div class="gcal-export-card">
+          <h4>📥 Universal Calendar Sync (.ICS format)</h4>
+          <p>Export all your scheduled tasks and deadlines in standard iCalendar format, 100% compatible with Google
+            Calendar, Apple Calendar, and Outlook.</p>
+          <div class="gcal-instructions">
+            <strong>How to import into Google Calendar:</strong>
+            <ol>
+              <li>Click the button below to download your <code>.ics</code> schedule file.</li>
+              <li>Open <a href="https://calendar.google.com" target="_blank" style="color:var(--accent-primary);">Google
+                  Calendar ↗</a>.</li>
+              <li>Click Settings ⚙️ &gt; <strong>Import &amp; Export</strong> &gt; Select this file.</li>
+            </ol>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="window.gcal.exportICS()" style="margin-top:12px;">
+            <span>📅 Download Google Calendar .ICS File</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 3: Google API Settings -->
+      <div class="gcal-tab-panel" id="gcal-tab-api">
+        <form onsubmit="window.gcal.saveApiCredentials(event)" class="modal-form">
+          <p class="gcal-tab-desc">Optionally configure Google Cloud OAuth 2.0 Client ID for background 2-way sync.</p>
+
+          <div class="form-group">
+            <label for="gcal-client-id">Google OAuth 2.0 Client ID</label>
+            <input type="text" id="gcal-client-id" class="form-input"
+              placeholder="e.g. 123456789-abc.apps.googleusercontent.com">
+          </div>
+
+          <div class="form-group">
+            <label for="gcal-api-key">Google Calendar API Key (Optional)</label>
+            <input type="password" id="gcal-api-key" class="form-input" placeholder="API Key for public events">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="gcal-autosync-toggle">
+              <span>Automatically prompt to sync newly created tasks with Google Calendar</span>
+            </label>
+          </div>
+
+          <div class="modal-footer" style="padding-top:12px;">
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer" style="padding:14px 24px; border-top:1px solid var(--border-subtle);">
+        <button type="button" class="btn btn-secondary" onclick="window.gcal.closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Focus Mode: Single Task Selection & Timer Customization Modal -->
+  <div class="modal-backdrop" id="focus-select-modal">
+    <div class="modal-dialog focus-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.3rem;">🎯</span>
+          <h3>Single-Task Focus Sanctuary</h3>
+        </div>
+        <button class="btn-close-modal" onclick="window.pomodoro.closeFocusSelectModal()">&times;</button>
+      </div>
+
+      <div class="focus-select-body">
+        <p class="focus-dialog-subtitle">Select <strong>just ONE task</strong> to dedicate your undivided attention to.
+        </p>
+
+        <!-- Task Picker List -->
+        <label class="focus-section-label">Select Your Focus Task *</label>
+        <div class="focus-tasks-picker" id="focus-tasks-picker">
+          <!-- Dynamically Rendered -->
+        </div>
+
+        <!-- Custom Timer Duration Controls -->
+        <div class="focus-settings-card">
+          <label class="focus-section-label">Customize Focus Timer</label>
+          <div class="duration-presets">
+            <button type="button" class="duration-pill active" data-mins="25"
+              onclick="window.pomodoro.setFocusPreset(25, this)">25 mins (Standard)</button>
+            <button type="button" class="duration-pill" data-mins="15"
+              onclick="window.pomodoro.setFocusPreset(15, this)">15 mins (Sprint)</button>
+            <button type="button" class="duration-pill" data-mins="45"
+              onclick="window.pomodoro.setFocusPreset(45, this)">45 mins (Deep Work)</button>
+            <button type="button" class="duration-pill" data-mins="60"
+              onclick="window.pomodoro.setFocusPreset(60, this)">60 mins (Marathon)</button>
+          </div>
+
+          <div class="custom-duration-row">
+            <span>Or custom minutes:</span>
+            <input type="number" id="focus-custom-minutes" min="1" max="180" value="25" class="form-input"
+              style="width: 80px; text-align: center;" oninput="window.pomodoro.syncCustomMinutes(this.value)">
+            <span>minutes</span>
+          </div>
+
+          <div class="focus-ambient-row">
+            <span>🌧️ Background Audio:</span>
+            <select id="focus-ambient-select" class="form-select" style="max-width: 170px;">
+              <option value="none">Off (Pure Silence)</option>
+              <option value="rain">Soothing Rain</option>
+              <option value="white">Calm White Noise</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="focus-modal-actions">
+          <button type="button" class="btn btn-secondary"
+            onclick="window.pomodoro.closeFocusSelectModal()">Cancel</button>
+          <button type="button" class="btn btn-primary btn-launch-focus" id="btn-launch-focus"
+            onclick="window.pomodoro.launchFocusMode()">
+            <span>⚡ Enter Focus Mode</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authentication & User Profile Modal -->
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal-dialog auth-dialog">
+      <div class="modal-header">
+        <div class="auth-header-title">
+          <div class="auth-brand-icon">⚡</div>
+          <div>
+            <h3 id="auth-modal-title">TaskFlow Account</h3>
+            <span class="auth-modal-subtitle" id="auth-modal-subtitle">Sign in or register for private workspace isolation</span>
+          </div>
+        </div>
+        <button class="btn-close-modal" onclick="window.app.closeAuthModal()" title="Close">&times;</button>
+      </div>
+
+      <!-- Auth Navigation Tabs (Sign In / Sign Up / Profile) -->
+      <div class="auth-tabs" id="auth-tabs">
+        <button class="auth-tab-btn active" id="tab-btn-signin" onclick="window.app.switchAuthTab('signin')">Sign In</button>
+        <button class="auth-tab-btn" id="tab-btn-signup" onclick="window.app.switchAuthTab('signup')">Create Account</button>
+        <button class="auth-tab-btn" id="tab-btn-profile" onclick="window.app.switchAuthTab('profile')" style="display: none;">My Profile</button>
+      </div>
+
+      <div class="auth-body">
+        <!-- 1. SIGN IN PANEL -->
+        <div class="auth-panel active" id="auth-panel-signin">
+          <form class="modal-form auth-form" onsubmit="event.preventDefault(); window.app.handleLoginSubmit();">
+            <div class="form-group">
+              <label for="signin-email">Email Address</label>
+              <input type="email" id="signin-email" class="form-input" placeholder="name@example.com" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label for="signin-password">Password</label>
+              <div class="password-input-group">
+                <input type="password" id="signin-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                <button type="button" class="btn-toggle-password" onclick="window.app.togglePasswordVisibility('signin-password')" title="Toggle password visibility">👁️</button>
+              </div>
+            </div>
+
+            <div class="auth-options-row">
+              <label class="checkbox-label" style="font-size: 0.8rem;">
+                <input type="checkbox" id="signin-remember" checked>
+                <span>Remember this device</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-auth-submit" id="btn-signin-submit">
+              <span>Sign In to Account</span>
+            </button>
+          </form>
+
+          <!-- Quick Demo Accounts Switcher -->
+          <div class="auth-demo-section">
+            <div class="auth-demo-divider"><span>or Quick Demo Login</span></div>
+            <div class="demo-accounts-grid">
+              <button type="button" class="btn-demo-account" onclick="window.app.handleDemoLogin('user_alex_dev')">
+                <span class="demo-avatar" style="background: #6366f1;">AC</span>
+                <div class="demo-account-info">
+                  <span class="demo-name">Alex Chen</span>
+                  <span class="demo-role">Tech Lead (Preloaded Tasks)</span>
+                </div>
+              </button>
+              <button type="button" class="btn-demo-account" onclick="window.app.handleDemoLogin('user_sarah_design')">
+                <span class="demo-avatar" style="background: #ec4899;">SM</span>
+                <div class="demo-account-info">
+                  <span class="demo-name">Sarah Miller</span>
+                  <span class="demo-role">Product Designer</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. SIGN UP PANEL -->
+        <div class="auth-panel" id="auth-panel-signup">
+          <form class="modal-form auth-form" onsubmit="event.preventDefault(); window.app.handleSignUpSubmit();">
+            <div class="form-group">
+              <label for="signup-name">Full Name</label>
+              <input type="text" id="signup-name" class="form-input" placeholder="e.g. Maya Lin" required autocomplete="name">
+            </div>
+
+            <div class="form-group">
+              <label for="signup-email">Email Address</label>
+              <input type="email" id="signup-email" class="form-input" placeholder="maya@example.com" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label for="signup-password">Create Password</label>
+              <div class="password-input-group">
+                <input type="password" id="signup-password" class="form-input" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password" oninput="window.app.checkPasswordStrength(this.value)">
+                <button type="button" class="btn-toggle-password" onclick="window.app.togglePasswordVisibility('signup-password')" title="Toggle password visibility">👁️</button>
+              </div>
+              <div class="password-strength-bar">
+                <div class="password-strength-fill" id="signup-strength-fill"></div>
+              </div>
+            </div>
+
+            <!-- Avatar Accent Color Picker -->
+            <div class="form-group">
+              <label>Profile Accent Color</label>
+              <div class="avatar-color-picker" id="signup-avatar-picker">
+                <!-- Color dots rendered dynamically -->
+              </div>
+            </div>
+
+            <div class="auth-options-row">
+              <label class="checkbox-label" style="font-size: 0.8rem;">
+                <input type="checkbox" id="signup-migrate" checked>
+                <span>Transfer current tasks into this new account</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-auth-submit" id="btn-signup-submit">
+              <span>Create Free Account</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- 3. PROFILE & SESSION MANAGEMENT PANEL -->
+        <div class="auth-panel" id="auth-panel-profile">
+          <div class="user-profile-card">
+            <div class="profile-avatar-large" id="profile-avatar-large" style="background: #64748b;">TF</div>
+            <div class="profile-details">
+              <h3 class="profile-name" id="profile-display-name">Alex Chen</h3>
+              <span class="profile-email" id="profile-display-email">alex.chen@example.com</span>
+              <span class="profile-badge" id="profile-display-role">Tech Lead</span>
+            </div>
+          </div>
+
+          <div class="profile-stats-grid">
+            <div class="profile-stat-box">
+              <span class="profile-stat-val" id="profile-stat-total">0</span>
+              <span class="profile-stat-lbl">Total Tasks</span>
+            </div>
+            <div class="profile-stat-box">
+              <span class="profile-stat-val" id="profile-stat-completed">0</span>
+              <span class="profile-stat-lbl">Completed</span>
+            </div>
+            <div class="profile-stat-box">
+              <span class="profile-stat-val" id="profile-stat-streak">0</span>
+              <span class="profile-stat-lbl">Day Streak</span>
+            </div>
+          </div>
+
+          <div class="profile-actions-list">
+            <button type="button" class="btn btn-secondary profile-action-btn" onclick="window.app.closeAuthModal(); window.onboarding.open();">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+              <span>Replay Onboarding Setup Tour</span>
+            </button>
+            <button type="button" class="btn btn-secondary profile-action-btn" onclick="window.app.handleLogout()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Log Out (Switch to Guest Mode)</span>
+            </button>
+            <button type="button" class="btn btn-secondary profile-action-btn danger-text" onclick="window.app.handleDeleteAccount()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Delete Account &amp; Data</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Onboarding Setup Wizard Modal -->
+  <div class="modal-backdrop" id="onboarding-modal">
+    <div class="modal-dialog onboarding-dialog">
+      <!-- Onboarding Step Indicator Bar -->
+      <div class="onboarding-header">
+        <div class="onboard-steps-tracker">
+          <div class="onboard-step-dot active" id="onboard-step-dot-1"><span class="step-num">1</span></div>
+          <div class="onboard-step-line"></div>
+          <div class="onboard-step-dot" id="onboard-step-dot-2"><span class="step-num">2</span></div>
+          <div class="onboard-step-line"></div>
+          <div class="onboard-step-dot" id="onboard-step-dot-3"><span class="step-num">3</span></div>
+          <div class="onboard-step-line"></div>
+          <div class="onboard-step-dot" id="onboard-step-dot-4"><span class="step-num">4</span></div>
+        </div>
+        <button class="btn-close-modal" onclick="window.onboarding.close()" title="Skip Onboarding">&times;</button>
+      </div>
+
+      <div class="onboarding-body">
+        <!-- STEP 1: Persona & Goals -->
+        <div class="onboard-step-panel active" id="onboard-step-panel-1">
+          <div class="onboard-title-group">
+            <span class="onboard-tag">Step 1 of 4</span>
+            <h2>What brings you to TaskFlow?</h2>
+            <p>Select your workflow style to personalize your initial workspace and starter tasks.</p>
+          </div>
+
+          <div class="persona-grid">
+            <div class="persona-option-card active" data-persona="dev" onclick="window.onboarding.selectPersona('dev')">
+              <div class="persona-icon-box">💻</div>
+              <div class="persona-details">
+                <span class="persona-name">Software Engineering</span>
+                <span class="persona-desc">Sprint tasks, code reviews, API integrations &amp; bug tracking</span>
+              </div>
+              <div class="persona-check">✓</div>
+            </div>
+
+            <div class="persona-option-card" data-persona="design" onclick="window.onboarding.selectPersona('design')">
+              <div class="persona-icon-box">🎨</div>
+              <div class="persona-details">
+                <span class="persona-name">Product &amp; UI/UX Design</span>
+                <span class="persona-desc">Figma reviews, design systems, wireframes &amp; user feedback</span>
+              </div>
+              <div class="persona-check">✓</div>
+            </div>
+
+            <div class="persona-option-card" data-persona="study" onclick="window.onboarding.selectPersona('study')">
+              <div class="persona-icon-box">🎓</div>
+              <div class="persona-details">
+                <span class="persona-name">Study &amp; Academic</span>
+                <span class="persona-desc">Lectures, research papers, exam prep &amp; study sprints</span>
+              </div>
+              <div class="persona-check">✓</div>
+            </div>
+
+            <div class="persona-option-card" data-persona="general" onclick="window.onboarding.selectPersona('general')">
+              <div class="persona-icon-box">🚀</div>
+              <div class="persona-details">
+                <span class="persona-name">Solopreneur &amp; Daily Flow</span>
+                <span class="persona-desc">Goal setting, habit building, deep work &amp; daily milestones</span>
+              </div>
+              <div class="persona-check">✓</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Theme & Default View -->
+        <div class="onboard-step-panel" id="onboard-step-panel-2">
+          <div class="onboard-title-group">
+            <span class="onboard-tag">Step 2 of 4</span>
+            <h2>Choose Your Aesthetic &amp; View</h2>
+            <p>Customize your workspace theme and primary task visualization mode.</p>
+          </div>
+
+          <div class="onboard-section-label">Select Workspace Theme</div>
+          <div class="theme-picker-grid">
+            <div class="theme-option-card active" data-theme="dark" onclick="window.onboarding.selectTheme('dark')">
+              <div class="theme-preview dark-preview">
+                <div class="tp-sidebar"></div>
+                <div class="tp-content"><div class="tp-bar"></div><div class="tp-card"></div></div>
+              </div>
+              <span class="theme-name">Dark Minimal</span>
+            </div>
+
+            <div class="theme-option-card" data-theme="midnight" onclick="window.onboarding.selectTheme('midnight')">
+              <div class="theme-preview midnight-preview">
+                <div class="tp-sidebar"></div>
+                <div class="tp-content"><div class="tp-bar"></div><div class="tp-card"></div></div>
+              </div>
+              <span class="theme-name">Midnight Purple</span>
+            </div>
+
+            <div class="theme-option-card" data-theme="cyber" onclick="window.onboarding.selectTheme('cyber')">
+              <div class="theme-preview cyber-preview">
+                <div class="tp-sidebar"></div>
+                <div class="tp-content"><div class="tp-bar"></div><div class="tp-card"></div></div>
+              </div>
+              <span class="theme-name">Cyberpunk Glow</span>
+            </div>
+
+            <div class="theme-option-card" data-theme="light" onclick="window.onboarding.selectTheme('light')">
+              <div class="theme-preview light-preview">
+                <div class="tp-sidebar"></div>
+                <div class="tp-content"><div class="tp-bar"></div><div class="tp-card"></div></div>
+              </div>
+              <span class="theme-name">Clean Light</span>
+            </div>
+          </div>
+
+          <div class="onboard-section-label" style="margin-top: 14px;">Default Starting View</div>
+          <div class="view-picker-grid">
+            <div class="view-option-card active" data-view="list" onclick="window.onboarding.selectView('list')">
+              <span class="view-opt-icon">📋</span>
+              <span class="view-opt-title">List View</span>
+            </div>
+            <div class="view-option-card" data-view="kanban" onclick="window.onboarding.selectView('kanban')">
+              <span class="view-opt-icon">📌</span>
+              <span class="view-opt-title">Kanban Board</span>
+            </div>
+            <div class="view-option-card" data-view="week" onclick="window.onboarding.selectView('week')">
+              <span class="view-opt-icon">🗓️</span>
+              <span class="view-opt-title">Sat–Fri Weekly</span>
+            </div>
+            <div class="view-option-card" data-view="calendar" onclick="window.onboarding.selectView('calendar')">
+              <span class="view-opt-icon">📅</span>
+              <span class="view-opt-title">Calendar</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Power-User Shortcuts & Superpowers -->
+        <div class="onboard-step-panel" id="onboard-step-panel-3">
+          <div class="onboard-title-group">
+            <span class="onboard-tag">Step 3 of 4</span>
+            <h2>Supercharge Your Productivity</h2>
+            <p>Essential shortcuts and built-in tools built for high-output work.</p>
+          </div>
+
+          <div class="superpowers-grid">
+            <div class="superpower-card">
+              <div class="sp-icon">🎯</div>
+              <div class="sp-text">
+                <span class="sp-title">Single-Task Focus Mode</span>
+                <span class="sp-desc">Select 1 priority task and enter a distraction-free Pomodoro countdown with ambient rain sounds. Press <kbd>F</kbd>.</span>
+              </div>
+            </div>
+
+            <div class="superpower-card">
+              <div class="sp-icon">✨</div>
+              <div class="sp-text">
+                <span class="sp-title">Command Palette</span>
+                <span class="sp-desc">Search actions, filter workspaces, and toggle settings instantly. Press <kbd>Ctrl + K</kbd> or <kbd>⌘ + K</kbd>.</span>
+              </div>
+            </div>
+
+            <div class="superpower-card">
+              <div class="sp-icon">◧</div>
+              <div class="sp-text">
+                <span class="sp-title">Collapsible Workspace</span>
+                <span class="sp-desc">Toggle the sidebar with <kbd>Ctrl + \</kbd> or click section headers to collapse smart views and tags.</span>
+              </div>
+            </div>
+
+            <div class="superpower-card">
+              <div class="sp-icon">📅</div>
+              <div class="sp-text">
+                <span class="sp-title">Google Calendar Sync</span>
+                <span class="sp-desc">Export or sync your tasks with your Google Calendar directly from the Tools &amp; Sync section.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Ready to Flow -->
+        <div class="onboard-step-panel" id="onboard-step-panel-4">
+          <div class="onboard-finish-card">
+            <div class="finish-badge">✨</div>
+            <h2>You're All Set to Flow!</h2>
+            <p>Your private workspace is configured and tailored to your goals. Everything is saved locally with 100% privacy.</p>
+            <div class="finish-checklist">
+              <div class="fc-item">✓ Workspace preset configured</div>
+              <div class="fc-item">✓ Personalized starter tasks ready</div>
+              <div class="fc-item">✓ Focus Mode &amp; Shortcuts enabled</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onboarding Footer Navigation -->
+      <div class="onboarding-footer">
+        <button type="button" class="btn btn-secondary" id="onboard-prev-btn" onclick="window.onboarding.prevStep()">
+          <span>← Back</span>
+        </button>
+        <div class="onboard-footer-right">
+          <button type="button" class="btn btn-text onboard-skip-btn" onclick="window.onboarding.close()">Skip Tour</button>
+          <button type="button" class="btn btn-primary" id="onboard-next-btn" onclick="window.onboarding.nextStep()">
+            <span>Continue →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master Super Admin Panel Modal -->
+  <div class="modal-backdrop" id="admin-modal">
+    <div class="modal-dialog admin-dialog">
+      <div class="modal-header">
+        <div class="admin-header-title">
+          <div class="admin-shield-icon">🛡️</div>
+          <div>
+            <h3>Master Admin Console</h3>
+            <span class="admin-subtitle">Full Authority &amp; Multi-User Management • Logged in as <strong>Sajid (Super Admin)</strong></span>
+          </div>
+        </div>
+        <button class="btn-close-modal" onclick="window.adminDashboard.close()" title="Close">&times;</button>
+      </div>
+
+      <div class="admin-body">
+        <!-- Global Metrics Overview Cards -->
+        <div class="admin-metrics-grid">
+          <div class="admin-metric-card">
+            <div class="am-icon-wrapper users">👥</div>
+            <div class="am-info">
+              <span class="am-label">Registered Users</span>
+              <h4 class="am-value" id="admin-stat-users">0</h4>
+            </div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="am-icon-wrapper tasks">⚡</div>
+            <div class="am-info">
+              <span class="am-label">Global Tasks Tracked</span>
+              <h4 class="am-value" id="admin-stat-tasks">0</h4>
+            </div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="am-icon-wrapper rate">📈</div>
+            <div class="am-info">
+              <span class="am-label">Completion Velocity</span>
+              <h4 class="am-value" id="admin-stat-rate">0%</h4>
+            </div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="am-icon-wrapper storage">💾</div>
+            <div class="am-info">
+              <span class="am-label">Storage Footprint</span>
+              <h4 class="am-value" id="admin-stat-storage">0 KB</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Actions Bar -->
+        <div class="admin-toolbar-row">
+          <div class="admin-section-heading">User Accounts &amp; Workspaces Partition</div>
+          <div class="admin-toolbar-actions">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.adminDashboard.exportMasterBackup()" title="Download Full JSON Snapshot">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Export Master Backup</span>
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm danger-text" onclick="window.adminDashboard.factoryReset()" title="Reset to Factory State">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Factory Reset</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Users Table Container -->
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User Profile</th>
+                <th>Access Role</th>
+                <th>Task Activity</th>
+                <th>Registered</th>
+                <th>Administrative Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-table-body">
+              <!-- Populated dynamically by AdminDashboard.render() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Immersive Focus Sanctuary -->
+  <div class="fullscreen-focus-mode" id="fullscreen-focus-mode">
+    <div class="focus-zen-aurora"></div>
+
+    <!-- Focus Top Navigation -->
+    <div class="focus-top-bar">
+      <div class="focus-brand-tag">
+        <span class="pulse-dot"></span>
+        <span>SINGLE-TASK FOCUS MODE</span>
+      </div>
+
+      <div class="focus-top-actions">
+        <button class="focus-action-btn" id="focus-zen-toggle-btn" onclick="window.pomodoro.toggleZenMode()"
+          title="Toggle Minimalist Zen View">
+          <span id="zen-icon">👁️</span> <span id="zen-text">Zen View</span>
+        </button>
+        <button class="focus-action-btn exit-focus-btn" onclick="window.pomodoro.exitFocusMode()"
+          title="Exit Focus Mode (Esc)">
+          <span>✕ Exit Focus</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Focus Main Center Content -->
+    <div class="focus-center-content">
+      <!-- Target Task Hero Banner -->
+      <div class="focus-task-card" id="focus-active-task-card">
+        <div class="focus-task-header">
+          <span class="badge priority-urgent" id="focus-task-prio">URGENT</span>
+          <span class="category-pill" id="focus-task-cat">Work & Projects</span>
+        </div>
+        <h1 class="focus-task-title" id="focus-task-title">Launch Next-Gen Product Landing Page</h1>
+        <p class="focus-task-desc" id="focus-task-desc">Complete final responsiveness audit, review dark mode contrast,
+          and connect analytics endpoints.</p>
+
+        <!-- Interactive Subtasks Checklist in Focus Mode -->
+        <div class="focus-subtasks-box" id="focus-subtasks-box">
+          <!-- Subtasks rendered here -->
+        </div>
+
+        <button class="btn btn-complete-focus-task" id="focus-complete-task-btn"
+          onclick="window.pomodoro.completeActiveFocusTask()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Mark Task as Completed</span>
+        </button>
+      </div>
+
+      <!-- Giant Glowing Countdown Timer -->
+      <div class="focus-timer-container">
+        <div class="focus-timer-ring-wrapper">
+          <svg class="focus-svg-ring" width="280" height="280" viewBox="0 0 280 280">
+            <circle class="focus-ring-bg" cx="140" cy="140" r="125"></circle>
+            <circle class="focus-ring-fg" id="focus-fullscreen-ring" cx="140" cy="140" r="125"></circle>
+          </svg>
+          <div class="focus-timer-text-group">
+            <span class="focus-countdown-digits" id="focus-fullscreen-digits">25:00</span>
+            <span class="focus-stage-label" id="focus-fullscreen-stage">Deep Focus Time</span>
+          </div>
+        </div>
+
+        <!-- Timer Controls Bar -->
+        <div class="focus-timer-controls">
+          <button class="focus-time-adjust-btn" onclick="window.pomodoro.adjustTimer(-300)"
+            title="Minus 5 minutes">-5m</button>
+          <button class="btn btn-primary focus-play-btn" id="focus-fullscreen-play-btn"
+            onclick="window.pomodoro.toggleStartPause()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span id="focus-play-btn-text">Start Focus</span>
+          </button>
+          <button class="focus-time-adjust-btn" onclick="window.pomodoro.adjustTimer(300)"
+            title="Add 5 minutes">+5m</button>
+          <button class="focus-reset-btn" onclick="window.pomodoro.reset()" title="Reset Timer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Focus Bottom Progress & Tip -->
+    <div class="focus-bottom-bar">
+      <div class="focus-session-dots" id="focus-fullscreen-dots">
+        <span class="session-dot"></span>
+        <span class="session-dot"></span>
+        <span class="session-dot"></span>
+        <span class="session-dot"></span>
+      </div>
+      <span class="focus-quote">“Single-tasking is the ultimate superpower in an age of distraction.”</span>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Application Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/pomodoro.js"></script>
+  <script src="js/onboarding.js"></script>
+  <script src="js/gcal.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
