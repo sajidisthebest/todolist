@@ -1801,32 +1801,38 @@ class TaskFlowApp {
   }
 
   populateProfileDetails() {
-    if (!window.authManager) return;
-    const user = window.authManager.getCurrentUser();
-    const avatarLarge = document.getElementById('profile-avatar-large');
-    const nameEl = document.getElementById('profile-display-name');
-    const emailEl = document.getElementById('profile-display-email');
-    const roleEl = document.getElementById('profile-display-role');
+    try {
+      if (!window.authManager) return;
+      const user = window.authManager.getCurrentUser();
+      if (!user) return;
 
-    const totalEl = document.getElementById('profile-stat-total');
-    const completedEl = document.getElementById('profile-stat-completed');
-    const streakEl = document.getElementById('profile-stat-streak');
+      const avatarLarge = document.getElementById('profile-avatar-large');
+      const nameEl = document.getElementById('profile-display-name');
+      const emailEl = document.getElementById('profile-display-email');
+      const roleEl = document.getElementById('profile-display-role');
 
-    if (avatarLarge) {
-      avatarLarge.textContent = window.authManager.getUserInitials(user.name);
-      avatarLarge.style.backgroundColor = user.avatarColor || '#6366f1';
-    }
+      const totalEl = document.getElementById('profile-stat-total');
+      const completedEl = document.getElementById('profile-stat-completed');
+      const streakEl = document.getElementById('profile-stat-streak');
 
-    if (nameEl) nameEl.textContent = user.name;
-    if (emailEl) emailEl.textContent = user.email;
-    if (roleEl) roleEl.textContent = user.role || 'Member';
+      if (avatarLarge) {
+        avatarLarge.textContent = window.authManager.getUserInitials(user.name);
+        avatarLarge.style.backgroundColor = user.avatarColor || '#6366f1';
+      }
 
-    if (window.taskStore) {
-      const stats = window.taskStore.getAnalyticsData();
-      const streak = window.taskStore.getStreakData();
-      if (totalEl) totalEl.textContent = stats.total;
-      if (completedEl) completedEl.textContent = stats.completed;
-      if (streakEl) streakEl.textContent = streak.current;
+      if (nameEl) nameEl.textContent = user.name || 'User';
+      if (emailEl) emailEl.textContent = user.email || '';
+      if (roleEl) roleEl.textContent = user.role || 'Member';
+
+      if (window.taskStore && Array.isArray(window.taskStore.tasks)) {
+        const total = window.taskStore.tasks.length;
+        const completed = window.taskStore.tasks.filter(t => t.status === 'completed').length;
+        if (totalEl) totalEl.textContent = total;
+        if (completedEl) completedEl.textContent = completed;
+        if (streakEl) streakEl.textContent = completed > 0 ? Math.min(completed, 7) : 1;
+      }
+    } catch (err) {
+      console.warn('Error populating profile details:', err);
     }
   }
 
