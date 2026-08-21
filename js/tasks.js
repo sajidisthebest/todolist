@@ -387,6 +387,33 @@ class TaskStore {
     }));
   }
 
+  deleteTag(tagName) {
+    if (!tagName) return 0;
+    const cleanTag = tagName.trim().toLowerCase();
+    let count = 0;
+
+    this.tasks.forEach(t => {
+      if (Array.isArray(t.tags) && t.tags.length > 0) {
+        const initialLength = t.tags.length;
+        t.tags = t.tags.filter(tg => tg.trim().toLowerCase() !== cleanTag);
+        if (t.tags.length !== initialLength) {
+          count++;
+        }
+      }
+    });
+
+    if (count > 0) {
+      this.saveTasks();
+    }
+
+    if (this.settings.activeTag && this.settings.activeTag.toLowerCase() === cleanTag) {
+      this.settings.activeTag = 'all';
+      this.saveSettings();
+    }
+
+    return count;
+  }
+
   getTodayDateString() {
     const now = new Date();
     const y = now.getFullYear();

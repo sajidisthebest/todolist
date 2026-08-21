@@ -402,13 +402,25 @@ class TaskFlowApp {
         sidebarTagsList.innerHTML = tags.map(t => {
           const isActive = activeTag.toLowerCase() === t.name.toLowerCase();
           return `
-            <button class="sidebar-tag-chip ${isActive ? 'active' : ''}" onclick="window.app.filterByTag('${this.escapeHtml(t.name)}')" title="Filter by #${this.escapeHtml(t.name)}">
-              <span>#${this.escapeHtml(t.name)}</span>
+            <div class="sidebar-tag-chip ${isActive ? 'active' : ''}" onclick="window.app.filterByTag('${this.escapeHtml(t.name)}')" title="Filter by #${this.escapeHtml(t.name)}">
+              <span class="tag-chip-name">#${this.escapeHtml(t.name)}</span>
               <span class="sidebar-tag-count">${t.count}</span>
-            </button>
+              <button type="button" class="btn-delete-tag" onclick="event.stopPropagation(); window.app.handleDeleteTag('${this.escapeHtml(t.name)}')" title="Delete tag #${this.escapeHtml(t.name)}">&times;</button>
+            </div>
           `;
         }).join('');
       }
+    }
+  }
+
+  handleDeleteTag(tagName) {
+    if (!tagName) return;
+    if (confirm(`Are you sure you want to delete tag "#${tagName}"? It will be removed from all tasks.`)) {
+      const count = window.taskStore.deleteTag(tagName);
+      if (window.soundEngine) window.soundEngine.playDelete();
+      this.initTagControls();
+      this.render();
+      this.showToast(`🗑️ Tag #${tagName} deleted from ${count} task(s)`, 'info');
     }
   }
 
