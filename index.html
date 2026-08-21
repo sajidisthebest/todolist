@@ -1030,8 +1030,8 @@
         <div class="auth-panel active" id="auth-panel-signin">
           <form class="modal-form auth-form" onsubmit="event.preventDefault(); window.app.handleLoginSubmit();">
             <div class="form-group">
-              <label for="signin-email">Email Address</label>
-              <input type="email" id="signin-email" class="form-input" placeholder="name@example.com" required autocomplete="email">
+              <label for="signin-username">Username</label>
+              <input type="text" id="signin-username" class="form-input" placeholder="e.g. Sajid or alex" required autocomplete="username">
             </div>
 
             <div class="form-group">
@@ -1062,14 +1062,14 @@
                 <span class="demo-avatar" style="background: #6366f1;">AC</span>
                 <div class="demo-account-info">
                   <span class="demo-name">Alex Chen</span>
-                  <span class="demo-role">Tech Lead (Preloaded Tasks)</span>
+                  <span class="demo-role">@alex (Preloaded Tasks)</span>
                 </div>
               </button>
               <button type="button" class="btn-demo-account" onclick="window.app.handleDemoLogin('user_sarah_design')">
                 <span class="demo-avatar" style="background: #ec4899;">SM</span>
                 <div class="demo-account-info">
                   <span class="demo-name">Sarah Miller</span>
-                  <span class="demo-role">Product Designer</span>
+                  <span class="demo-role">@sarah (Product Designer)</span>
                 </div>
               </button>
             </div>
@@ -1080,19 +1080,19 @@
         <div class="auth-panel" id="auth-panel-signup">
           <form class="modal-form auth-form" onsubmit="event.preventDefault(); window.app.handleSignUpSubmit();">
             <div class="form-group">
-              <label for="signup-name">Full Name</label>
-              <input type="text" id="signup-name" class="form-input" placeholder="e.g. Maya Lin" required autocomplete="name">
+              <label for="signup-username">Choose Username</label>
+              <input type="text" id="signup-username" class="form-input" placeholder="e.g. Sajid or alex_chen" required autocomplete="username" minlength="2">
             </div>
 
             <div class="form-group">
-              <label for="signup-email">Email Address</label>
-              <input type="email" id="signup-email" class="form-input" placeholder="maya@example.com" required autocomplete="email">
+              <label for="signup-name">Display Name <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal;">(Optional)</span></label>
+              <input type="text" id="signup-name" class="form-input" placeholder="e.g. Sajidul Islam" autocomplete="name">
             </div>
 
             <div class="form-group">
               <label for="signup-password">Create Password</label>
               <div class="password-input-group">
-                <input type="password" id="signup-password" class="form-input" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password" oninput="window.app.checkPasswordStrength(this.value)">
+                <input type="password" id="signup-password" class="form-input" placeholder="At least 4 characters" minlength="4" required autocomplete="new-password" oninput="window.app.checkPasswordStrength(this.value)">
                 <button type="button" class="btn-toggle-password" onclick="window.app.togglePasswordVisibility('signup-password')" title="Toggle password visibility">👁️</button>
               </div>
               <div class="password-strength-bar">

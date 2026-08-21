@@ -76,7 +76,7 @@ class AdminDashboard {
                 </span>
                 <div class="admin-user-info">
                   <span class="admin-user-name">${this.escapeHtml(u.name)} ${isCurrent ? '<span class="active-dot-pill">Active</span>' : ''}</span>
-                  <span class="admin-user-email">${this.escapeHtml(u.email)}</span>
+                  <span class="admin-user-email">@${this.escapeHtml(u.username || u.name.toLowerCase())}</span>
                 </div>
               </div>
             </td>

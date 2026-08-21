@@ -160,33 +160,45 @@ class AuthManager {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  signUp({ name, email, password, avatarColor = '#6366f1', migrateGuest = true }) {
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanName = name.trim();
+  signUp({ username, name, email, password, avatarColor = '#6366f1', migrateGuest = true }) {
+    const rawUsername = (username || name || email || '').trim();
+    const cleanUsername = rawUsername.toLowerCase().replace(/[^a-z0-9_.-]/g, '');
+    const displayName = (name && name.trim()) ? name.trim() : rawUsername;
+    const cleanEmail = (email && email.trim()) ? email.trim().toLowerCase() : `${cleanUsername}@taskflow.local`;
 
-    if (!cleanName || !cleanEmail || !password) {
-      return { success: false, message: 'Please fill out all required fields.' };
+    if (!cleanUsername || !password) {
+      return { success: false, message: 'Please provide a username and password.' };
+    }
+
+    if (cleanUsername.length < 2) {
+      return { success: false, message: 'Username must be at least 2 characters.' };
     }
 
     if (password.length < 4) {
       return { success: false, message: 'Password must be at least 4 characters.' };
     }
 
-    // Check if email already exists
-    const exists = this.users.find(u => u.email.toLowerCase() === cleanEmail);
+    // Check if username already exists
+    const exists = this.users.find(u => 
+      (u.username && u.username.toLowerCase() === cleanUsername) ||
+      u.name.toLowerCase() === displayName.toLowerCase() ||
+      (email && u.email.toLowerCase() === cleanEmail)
+    );
     if (exists) {
-      return { success: false, message: 'An account with this email already exists.' };
+      return { success: false, message: `Username "${cleanUsername}" is already taken. Please choose another.` };
     }
+
+    const isSajid = cleanUsername === 'sajid' || displayName.toLowerCase() === 'sajid';
 
     const newUser = {
       id: 'user_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
-      username: cleanName.toLowerCase().replace(/\s+/g, '_'),
-      name: cleanName,
+      username: cleanUsername,
+      name: displayName,
       email: cleanEmail,
       password: password,
-      isAdmin: false,
+      isAdmin: isSajid,
       avatarColor: avatarColor || this.AVATAR_COLORS[Math.floor(Math.random() * this.AVATAR_COLORS.length)],
-      role: 'Member',
+      role: isSajid ? 'Super Admin' : 'Member',
       createdAt: new Date().toISOString()
     };
 
@@ -210,7 +222,7 @@ class AuthManager {
       window.taskStore.switchUser(newUser.id);
     }
 
-    return { success: true, user: newUser, message: `Welcome to TaskFlow Pro, ${cleanName}! 🎉` };
+    return { success: true, user: newUser, message: `Welcome to TaskFlow Pro, @${cleanUsername}! 🎉` };
   }
 
   login({ email, password }) {

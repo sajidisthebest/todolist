@@ -1728,12 +1728,13 @@ class TaskFlowApp {
   }
 
   handleLoginSubmit() {
-    const emailInput = document.getElementById('signin-email');
+    const userInput = document.getElementById('signin-username') || document.getElementById('signin-email');
     const passwordInput = document.getElementById('signin-password');
-    if (!emailInput || !passwordInput) return;
+    if (!userInput || !passwordInput) return;
 
     const result = window.authManager.login({
-      email: emailInput.value,
+      email: userInput.value,
+      username: userInput.value,
       password: passwordInput.value
     });
 
@@ -1742,7 +1743,7 @@ class TaskFlowApp {
       this.updateHeaderUserChip();
       if (window.soundEngine) window.soundEngine.playSuccess();
       this.showToast(result.message, 'success');
-      emailInput.value = '';
+      userInput.value = '';
       passwordInput.value = '';
 
       // If logging in as Master Admin, redirect directly to Admin Panel
@@ -1758,16 +1759,16 @@ class TaskFlowApp {
   }
 
   handleSignUpSubmit() {
+    const usernameInput = document.getElementById('signup-username');
     const nameInput = document.getElementById('signup-name');
-    const emailInput = document.getElementById('signup-email');
     const passwordInput = document.getElementById('signup-password');
     const migrateInput = document.getElementById('signup-migrate');
 
-    if (!nameInput || !emailInput || !passwordInput) return;
+    if (!usernameInput || !passwordInput) return;
 
     const result = window.authManager.signUp({
-      name: nameInput.value,
-      email: emailInput.value,
+      username: usernameInput.value,
+      name: (nameInput && nameInput.value.trim()) ? nameInput.value : usernameInput.value,
       password: passwordInput.value,
       avatarColor: this.selectedAvatarColor,
       migrateGuest: migrateInput ? migrateInput.checked : true
@@ -1779,8 +1780,8 @@ class TaskFlowApp {
       if (window.confettiCanon) window.confettiCanon.triggerBurst();
       if (window.soundEngine) window.soundEngine.playSuccess();
       this.showToast(result.message, 'success');
-      nameInput.value = '';
-      emailInput.value = '';
+      usernameInput.value = '';
+      if (nameInput) nameInput.value = '';
       passwordInput.value = '';
     } else {
       if (window.soundEngine) window.soundEngine.playMute();
