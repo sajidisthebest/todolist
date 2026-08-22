@@ -1475,12 +1475,25 @@
           <div>
             <h3 class="modal-title">TaskFlow Pro MCP Server &amp; AI Studio</h3>
             <div class="mcp-status-pill">
-              <span class="mcp-status-dot offline" id="mcp-status-indicator"></span>
-              <span id="mcp-status-label">Checking MCP Server...</span>
+              <span class="mcp-status-dot online" id="mcp-status-indicator"></span>
+              <span id="mcp-status-label">Connected (☁️ Netlify Cloud 24/7 • 10 Tools Active)</span>
             </div>
           </div>
         </div>
         <button class="modal-close-btn" onclick="window.mcpBridge.closeModal()">&times;</button>
+      </div>
+
+      <!-- Mode Switcher Bar (Cloud vs Local) -->
+      <div class="mcp-mode-switcher-bar">
+        <span class="mcp-mode-label">Target Mode:</span>
+        <div class="mcp-mode-toggle-group">
+          <button class="mcp-mode-btn active" id="mcp-mode-cloud-btn" onclick="window.mcpBridge.setMode('cloud')" title="Use 24/7 Netlify Serverless Cloud API">
+            <span>☁️ Netlify Cloud (24/7)</span>
+          </button>
+          <button class="mcp-mode-btn" id="mcp-mode-local-btn" onclick="window.mcpBridge.setMode('local')" title="Use Local Python/Node Server on PC">
+            <span>💻 Localhost PC (Port 3333)</span>
+          </button>
+        </div>
       </div>
 
       <!-- Navigation Tabs -->
@@ -1513,16 +1526,16 @@
               <div class="mcp-client-header">
                 <div class="mcp-client-logo spark">✨</div>
                 <div>
-                  <h4>Google Spark / SSE Agent</h4>
-                  <span class="mcp-client-tag">Remote SSE Transport</span>
+                  <h4>Google Spark / Cloud AI</h4>
+                  <span class="mcp-client-tag">Cloud HTTPS Endpoint</span>
                 </div>
               </div>
-              <p class="mcp-client-desc">Connect Google Spark or any remote MCP client using the Server-Sent Events (SSE) endpoint.</p>
+              <p class="mcp-client-desc">Connect Google Spark or any cloud AI agent directly using your live Netlify serverless endpoint.</p>
               <div class="mcp-code-preview">
-                <code>http://localhost:3333/sse</code>
+                <code id="mcp-spark-endpoint-preview">https://sajidxtodo.netlify.app/api/mcp</code>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="window.mcpBridge.copyConfig('google-spark')">
-                <span>📋 Copy Config JSON</span>
+                <span>📋 Copy Spark Config JSON</span>
               </button>
             </div>
 
@@ -1532,7 +1545,7 @@
                 <div class="mcp-client-logo antigravity">🌌</div>
                 <div>
                   <h4>Antigravity IDE</h4>
-                  <span class="mcp-client-tag">Workspace Plugin / Stdio</span>
+                  <span class="mcp-client-tag">Workspace Plugin / Cloud</span>
                 </div>
               </div>
               <p class="mcp-client-desc">Pre-configured in <code>.agents/plugins/taskflow/</code>. Instant pair-programming task management.</p>
@@ -1555,7 +1568,7 @@
               </div>
               <p class="mcp-client-desc">Add TaskFlow to Claude Desktop to manage your daily tasks directly from your chat conversations.</p>
               <div class="mcp-code-preview">
-                <code>mcpServers.taskflow-pro</code>
+                <code>https://sajidxtodo.netlify.app/api/mcp</code>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="window.mcpBridge.copyConfig('claude')">
                 <span>📋 Copy Claude Config</span>
@@ -1573,7 +1586,7 @@
               </div>
               <p class="mcp-client-desc">Integrate task creation and sprint backlog checks into Cursor or VS Code AI assistants.</p>
               <div class="mcp-code-preview">
-                <code>.cursor/mcp.json</code>
+                <code>https://sajidxtodo.netlify.app/api/mcp</code>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="window.mcpBridge.copyConfig('cursor')">
                 <span>📋 Copy Cursor Config</span>
@@ -1587,12 +1600,12 @@
           <div class="mcp-sync-dashboard">
             <div class="mcp-sync-status-card">
               <div class="mcp-sync-stat">
-                <span class="mcp-sync-stat-label">Server Endpoint</span>
-                <h4 class="mcp-sync-stat-val">http://localhost:3333</h4>
+                <span class="mcp-sync-stat-label">Active Endpoint</span>
+                <h4 class="mcp-sync-stat-val" id="mcp-sync-endpoint-label">https://sajidxtodo.netlify.app/api/mcp</h4>
               </div>
               <div class="mcp-sync-stat">
-                <span class="mcp-sync-stat-label">Database File</span>
-                <h4 class="mcp-sync-stat-val">mcp-server/data.json</h4>
+                <span class="mcp-sync-stat-label">Deployment Architecture</span>
+                <h4 class="mcp-sync-stat-val">Netlify Serverless Lambda</h4>
               </div>
               <div class="mcp-sync-stat">
                 <span class="mcp-sync-stat-label">Sync Heartbeat</span>

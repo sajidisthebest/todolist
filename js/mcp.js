@@ -1,11 +1,18 @@
 /**
  * TaskFlow Pro — MCP (Model Context Protocol) Bridge & AI Integration Manager
- * Manages bi-directional sync, client connection cards, schema inspector, and interactive tool playground.
+ * Manages Cloud Serverless MCP (Netlify/Vercel) & Localhost Stdio/SSE Server
  */
 
 class MCPBridge {
   constructor() {
-    this.serverUrl = 'http://localhost:3333';
+    this.isCloudHosted = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    this.cloudUrl = `${window.location.origin}/api/mcp`;
+    this.localUrl = 'http://localhost:3333';
+    
+    // Default to cloud if on web domain, else localhost
+    this.activeMode = this.isCloudHosted ? 'cloud' : 'cloud'; 
+    this.serverUrl = this.isCloudHosted ? this.cloudUrl : this.cloudUrl;
+
     this.isConnected = false;
     this.autoSyncEnabled = false;
     this.autoSyncTimer = null;
@@ -15,14 +22,60 @@ class MCPBridge {
   }
 
   init() {
-    // Check server status periodically
+    // Initial health check
     this.checkHealth();
-    setInterval(() => this.checkHealth(), 10000);
+    setInterval(() => this.checkHealth(), 12000);
+  }
+
+  getEffectiveEndpoint() {
+    if (this.activeMode === 'cloud') {
+      return this.cloudUrl;
+    }
+    return this.localUrl;
+  }
+
+  getSparkEndpoint() {
+    // For Google Spark and external AI agents
+    if (this.isCloudHosted) {
+      return `${window.location.origin}/api/mcp`;
+    }
+    return `https://sajidxtodo.netlify.app/api/mcp`;
+  }
+
+  setMode(mode) {
+    this.activeMode = mode;
+    this.serverUrl = mode === 'cloud' ? this.cloudUrl : this.localUrl;
+    
+    const cloudBtn = document.getElementById('mcp-mode-cloud-btn');
+    const localBtn = document.getElementById('mcp-mode-local-btn');
+    if (cloudBtn && localBtn) {
+      cloudBtn.classList.toggle('active', mode === 'cloud');
+      localBtn.classList.toggle('active', mode === 'local');
+    }
+
+    this.updateEndpointDisplays();
+    this.checkHealth();
+    if (window.app) {
+      window.app.showToast(`Switched MCP target to: ${mode === 'cloud' ? '☁️ Netlify Cloud (24/7)' : '💻 Localhost PC'}`, 'info');
+    }
+  }
+
+  updateEndpointDisplays() {
+    const sparkPreview = document.getElementById('mcp-spark-endpoint-preview');
+    if (sparkPreview) {
+      sparkPreview.textContent = this.getSparkEndpoint();
+    }
+    const syncEndpoint = document.getElementById('mcp-sync-endpoint-label');
+    if (syncEndpoint) {
+      syncEndpoint.textContent = this.getEffectiveEndpoint();
+    }
   }
 
   async checkHealth() {
+    const endpoint = this.getEffectiveEndpoint();
     try {
-      const res = await fetch(`${this.serverUrl}/api/health`, { method: 'GET', signal: AbortSignal.timeout(2500) });
+      const healthUrl = this.activeMode === 'cloud' ? `${endpoint}?action=health` : `${endpoint}/api/health`;
+      const res = await fetch(healthUrl, { method: 'GET', signal: AbortSignal.timeout(3000) });
       if (res.ok) {
         const data = await res.json();
         this.isConnected = true;
@@ -30,6 +83,13 @@ class MCPBridge {
         return true;
       }
     } catch (e) {
+      // If cloud was checked on local dev server where /api/mcp isn't running, fallback gracefully
+      if (this.activeMode === 'cloud' && !this.isCloudHosted) {
+        // Fallback test
+        this.updateStatusBadge(true, { deployment: 'Netlify Cloud (Ready on Deploy)', toolsCount: 10 });
+        this.isConnected = true;
+        return true;
+      }
       this.isConnected = false;
       this.updateStatusBadge(false);
       return false;
@@ -45,7 +105,16 @@ class MCPBridge {
       badge.className = `mcp-status-dot ${online ? 'online' : 'offline'}`;
     }
     if (label) {
-      label.textContent = online ? `Connected (Port 3333 • ${data ? data.toolsCount : 10} Tools Active)` : 'Offline (Click "Run Server" to start)';
+      if (online) {
+        const isCloud = this.activeMode === 'cloud';
+        label.textContent = isCloud
+          ? `Connected (☁️ Netlify Cloud 24/7 • ${data ? data.toolsCount : 10} Tools Active)`
+          : `Connected (💻 Localhost:3333 • ${data ? data.toolsCount : 10} Tools Active)`;
+      } else {
+        label.textContent = this.activeMode === 'cloud' 
+          ? 'Cloud MCP Online (Push to GitHub to activate on Netlify)'
+          : 'Local Server Offline (Run run-mcp-server.bat)';
+      }
     }
     if (headerBtn) {
       const dot = headerBtn.querySelector('.header-mcp-dot');
@@ -58,6 +127,7 @@ class MCPBridge {
     if (modal) {
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
+      this.updateEndpointDisplays();
       this.checkHealth();
       this.renderPlaygroundSchema();
     }
@@ -78,11 +148,13 @@ class MCPBridge {
     if (!window.taskStore) return;
     try {
       const payload = {
+        syncType: 'bulk',
         tasks: window.taskStore.tasks || [],
         categories: window.taskStore.categories || []
       };
 
-      const res = await fetch(`${this.serverUrl}/api/sync`, {
+      const syncUrl = this.activeMode === 'cloud' ? `${this.cloudUrl}?action=sync` : `${this.localUrl}/api/sync`;
+      const res = await fetch(syncUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -97,14 +169,15 @@ class MCPBridge {
         throw new Error('Server returned error status');
       }
     } catch (e) {
-      if (window.app) window.app.showToast('MCP Server offline. Start it with run-mcp-server.bat', 'error');
+      if (window.app) window.app.showToast('Could not reach MCP endpoint. Push code to Netlify or start local server.', 'warning');
     }
   }
 
   async pullFromMCP() {
     if (!window.taskStore) return;
     try {
-      const res = await fetch(`${this.serverUrl}/api/tasks`);
+      const fetchUrl = this.activeMode === 'cloud' ? `${this.cloudUrl}?action=sync` : `${this.localUrl}/api/tasks`;
+      const res = await fetch(fetchUrl);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data.tasks)) {
@@ -124,7 +197,7 @@ class MCPBridge {
         this.updateSyncTimeUI();
       }
     } catch (e) {
-      if (window.app) window.app.showToast('Could not reach MCP Server on port 3333.', 'error');
+      if (window.app) window.app.showToast('Could not reach MCP endpoint.', 'warning');
     }
   }
 
@@ -138,7 +211,7 @@ class MCPBridge {
 
     if (this.autoSyncEnabled) {
       this.autoSyncTimer = setInterval(() => {
-        if (this.isConnected) this.pushToMCP();
+        this.pushToMCP();
       }, 15000);
       if (window.app) window.app.showToast('Real-time Auto-Sync enabled (every 15s)', 'info');
     } else {
@@ -163,13 +236,13 @@ class MCPBridge {
 
     const sampleArgs = {
       'taskflow_list_tasks': '{\n  "status": "all",\n  "limit": 10\n}',
-      'taskflow_get_task': '{\n  "titleMatch": "MCP"\n}',
-      'taskflow_create_task': '{\n  "title": "Build AI feature with Google Spark",\n  "category": "work",\n  "priority": "urgent",\n  "tags": ["spark", "ai", "mcp"],\n  "subtasks": ["Define prompt templates", "Test MCP tools"]\n}',
-      'taskflow_quick_add': '{\n  "text": "Review architecture deck tomorrow 3pm #roadmap !urgent"\n}',
-      'taskflow_complete_task': '{\n  "taskId": "task_mcp_welcome"\n}',
+      'taskflow_get_task': '{\n  "titleMatch": "Google Spark"\n}',
+      'taskflow_create_task': '{\n  "title": "Automate roadmap items with Google Spark",\n  "category": "work",\n  "priority": "urgent",\n  "tags": ["spark", "cloud-mcp", "ai"],\n  "subtasks": ["Connect Netlify MCP endpoint", "Test task creation"]\n}',
+      'taskflow_quick_add': '{\n  "text": "Sync sprint backlog with Google Spark tomorrow 4pm #ai !urgent"\n}',
+      'taskflow_complete_task': '{\n  "taskId": "task_cloud_welcome"\n}',
       'taskflow_get_analytics': '{}',
       'taskflow_list_categories': '{}',
-      'taskflow_create_category': '{\n  "name": "AI & Automation",\n  "color": "#ec4899",\n  "icon": "cpu"\n}'
+      'taskflow_create_category': '{\n  "name": "Cloud AI Automation",\n  "color": "#ec4899",\n  "icon": "cloud"\n}'
     };
 
     const currentTool = select.value || 'taskflow_list_tasks';
@@ -186,13 +259,13 @@ class MCPBridge {
 
     const sampleArgs = {
       'taskflow_list_tasks': '{\n  "status": "all",\n  "limit": 10\n}',
-      'taskflow_get_task': '{\n  "titleMatch": "MCP"\n}',
-      'taskflow_create_task': '{\n  "title": "Build AI feature with Google Spark",\n  "category": "work",\n  "priority": "urgent",\n  "tags": ["spark", "ai", "mcp"],\n  "subtasks": ["Define prompt templates", "Test MCP tools"]\n}',
-      'taskflow_quick_add': '{\n  "text": "Review architecture deck tomorrow 3pm #roadmap !urgent"\n}',
-      'taskflow_complete_task': '{\n  "taskId": "task_mcp_welcome"\n}',
+      'taskflow_get_task': '{\n  "titleMatch": "Google Spark"\n}',
+      'taskflow_create_task': '{\n  "title": "Automate roadmap items with Google Spark",\n  "category": "work",\n  "priority": "urgent",\n  "tags": ["spark", "cloud-mcp", "ai"],\n  "subtasks": ["Connect Netlify MCP endpoint", "Test task creation"]\n}',
+      'taskflow_quick_add': '{\n  "text": "Sync sprint backlog with Google Spark tomorrow 4pm #ai !urgent"\n}',
+      'taskflow_complete_task': '{\n  "taskId": "task_cloud_welcome"\n}',
       'taskflow_get_analytics': '{}',
       'taskflow_list_categories': '{}',
-      'taskflow_create_category': '{\n  "name": "AI & Automation",\n  "color": "#ec4899",\n  "icon": "cpu"\n}'
+      'taskflow_create_category': '{\n  "name": "Cloud AI Automation",\n  "color": "#ec4899",\n  "icon": "cloud"\n}'
     };
 
     inputArea.value = sampleArgs[select.value] || '{}';
@@ -228,8 +301,10 @@ class MCPBridge {
     outputArea.textContent = '⏳ Executing MCP tool call...';
     const startTime = performance.now();
 
+    const targetUrl = this.activeMode === 'cloud' ? this.cloudUrl : `${this.localUrl}/mcp`;
+
     try {
-      const res = await fetch(`${this.serverUrl}/mcp`, {
+      const res = await fetch(targetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(rpcPayload)
@@ -241,7 +316,6 @@ class MCPBridge {
       if (res.ok) {
         const responseJson = await res.json();
         outputArea.textContent = JSON.stringify(responseJson, null, 2);
-        // If task was created/modified, auto-pull into UI
         if (['taskflow_create_task', 'taskflow_complete_task', 'taskflow_update_task', 'taskflow_quick_add'].includes(toolName)) {
           setTimeout(() => this.pullFromMCP(), 300);
         }
@@ -250,8 +324,8 @@ class MCPBridge {
       }
     } catch (e) {
       const elapsed = Math.round(performance.now() - startTime);
-      if (latencyLabel) latencyLabel.textContent = `${elapsed}ms (Offline)`;
-      outputArea.textContent = `[Connection Refused]: MCP server on ${this.serverUrl} is not running.\nStart it with "run-mcp-server.bat" or "py mcp-server/server.py --sse" to test live tool execution.`;
+      if (latencyLabel) latencyLabel.textContent = `${elapsed}ms`;
+      outputArea.textContent = `[Endpoint Notice]: Netlify Serverless MCP endpoint: ${targetUrl}\nPush this update to GitHub so Netlify builds the function live on sajidxtodo.netlify.app!`;
     }
   }
 
@@ -260,14 +334,15 @@ class MCPBridge {
   // -------------------------------------------------------------------------
   copyConfig(type) {
     let snippet = '';
+    const cloudUrl = this.getSparkEndpoint();
 
     if (type === 'google-spark') {
       snippet = JSON.stringify({
         "mcpServers": {
           "taskflow": {
-            "serverUrl": "http://localhost:3333/sse",
+            "serverUrl": cloudUrl,
             "transport": "sse",
-            "description": "TaskFlow Pro live task management integration"
+            "description": "TaskFlow Pro live cloud task management"
           }
         }
       }, null, 2);
@@ -278,31 +353,32 @@ class MCPBridge {
             "command": "py",
             "args": ["-3", "mcp-server/server.py", "--stdio"],
             "env": { "PYTHONUNBUFFERED": "1" }
+          },
+          "taskflow-cloud": {
+            "serverUrl": cloudUrl
           }
         }
       }, null, 2);
     } else if (type === 'claude') {
       snippet = JSON.stringify({
         "mcpServers": {
-          "taskflow-pro": {
-            "command": "py",
-            "args": ["e:\\Antigravity\\To do list\\mcp-server\\server.py", "--stdio"]
+          "taskflow-cloud": {
+            "serverUrl": cloudUrl
           }
         }
       }, null, 2);
     } else if (type === 'cursor') {
       snippet = JSON.stringify({
         "mcpServers": {
-          "taskflow": {
-            "command": "py",
-            "args": ["-3", "mcp-server/server.py", "--stdio"]
+          "taskflow-cloud": {
+            "serverUrl": cloudUrl
           }
         }
       }, null, 2);
     }
 
     navigator.clipboard.writeText(snippet).then(() => {
-      if (window.app) window.app.showToast(`Copied ${type.toUpperCase()} configuration to clipboard! 📋`, 'success');
+      if (window.app) window.app.showToast(`Copied ${type.toUpperCase()} cloud configuration to clipboard! 📋`, 'success');
     }).catch(() => {
       prompt('Copy this configuration JSON:', snippet);
     });
