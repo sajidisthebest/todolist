@@ -20,7 +20,8 @@ class TaskStore {
       'view-analytics': { key: '4', label: 'Switch to Analytics View', icon: '📊' },
       'cycle-theme': { key: 't', label: 'Cycle Theme Mode', icon: '🌙' },
       'command-palette': { key: 'k', label: 'Command Palette (Ctrl/Cmd+)', icon: '✨' },
-      'shortcuts-modal': { key: '?', label: 'Open Keyboard Shortcuts', icon: '⌨️' }
+      'shortcuts-modal': { key: '?', label: 'Open Keyboard Shortcuts', icon: '⌨️' },
+      'mcp-modal': { key: 'm', label: 'Open MCP & AI Studio', icon: '🤖' }
     };
 
     this.settings = {

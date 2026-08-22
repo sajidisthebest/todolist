@@ -5,6 +5,8 @@
   "main": "index.html",
   "scripts": {
     "start": "serve .",
+    "mcp:py": "py mcp-server/server.py --sse --port 3333",
+    "mcp:node": "node mcp-server/server.js --sse --port 3333",
     "deploy:vercel": "vercel --prod",
     "deploy:netlify": "netlify deploy --prod --dir=."
   },

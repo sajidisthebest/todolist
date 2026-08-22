@@ -1,0 +1,112 @@
+{
+  "categories": [
+    {
+      "id": "work",
+      "name": "Work & Projects",
+      "color": "#6366f1",
+      "icon": "briefcase"
+    },
+    {
+      "id": "personal",
+      "name": "Personal Life",
+      "color": "#ec4899",
+      "icon": "user"
+    },
+    {
+      "id": "study",
+      "name": "Study & Learning",
+      "color": "#06b6d4",
+      "icon": "book-open"
+    },
+    {
+      "id": "fitness",
+      "name": "Health & Fitness",
+      "color": "#10b981",
+      "icon": "activity"
+    },
+    {
+      "id": "creative",
+      "name": "Design & Code",
+      "color": "#8b5cf6",
+      "icon": "feather"
+    },
+    {
+      "id": "shopping",
+      "name": "Errands & Shopping",
+      "color": "#f59e0b",
+      "icon": "shopping-bag"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task_mcp_welcome",
+      "title": "⚡ Connect TaskFlow Pro to Google Spark & AI Agents via MCP",
+      "description": "TaskFlow Pro now features a dedicated Model Context Protocol (MCP) server! AI agents can inspect, create, update, and manage your tasks directly.",
+      "category": "work",
+      "priority": "urgent",
+      "status": "in_progress",
+      "dueDate": "2026-08-22",
+      "dueTime": "14:00",
+      "subtasks": [
+        {
+          "id": "st_1",
+          "text": "Start MCP server with run-mcp-server.bat or py mcp-server/server.py",
+          "completed": true
+        },
+        {
+          "id": "st_2",
+          "text": "Connect Google Spark, Antigravity, or Claude Desktop",
+          "completed": false
+        },
+        {
+          "id": "st_3",
+          "text": "Test tool calls using the in-app MCP Playground",
+          "completed": false
+        }
+      ],
+      "tags": [
+        "mcp",
+        "ai",
+        "integration",
+        "google-spark"
+      ],
+      "pomodorosEstimated": 2,
+      "pomodorosCompleted": 1,
+      "createdAt": "2026-08-22T08:00:00.000Z",
+      "completedAt": null,
+      "isPinned": true
+    },
+    {
+      "id": "task_sample_audit",
+      "title": "Review Quarterly Roadmap and Task Backlog",
+      "description": "Align priorities across active sprints and categorize incoming items.",
+      "category": "work",
+      "priority": "high",
+      "status": "todo",
+      "dueDate": "2026-08-23",
+      "dueTime": "16:00",
+      "subtasks": [
+        {
+          "id": "st_10",
+          "text": "Filter urgent deliverables",
+          "completed": false
+        },
+        {
+          "id": "st_11",
+          "text": "Archive stale milestones",
+          "completed": false
+        }
+      ],
+      "tags": [
+        "planning",
+        "roadmap"
+      ],
+      "pomodorosEstimated": 3,
+      "pomodorosCompleted": 0,
+      "createdAt": "2026-08-22T08:30:00.000Z",
+      "completedAt": null,
+      "isPinned": false
+    }
+  ],
+  "lastUpdated": "2026-08-22T04:21:19.196183Z"
+}

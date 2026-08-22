@@ -262,6 +262,8 @@ class TaskFlowApp {
         this.cycleTheme();
       } else if (key === (sc['shortcuts-modal'] || '?')) {
         this.openShortcutsModal();
+      } else if (key === (sc['mcp-modal'] || 'm')) {
+        if (window.mcpBridge) window.mcpBridge.openModal();
       } else if (e.key === 'Escape') {
         this.closeAllModals();
       }
@@ -1499,7 +1501,27 @@ class TaskFlowApp {
     this.closeTaskModal();
     this.closeCategoryModal();
     this.closeShortcutsModal();
+    this.closeAuthModal();
+    if (window.mcpBridge) window.mcpBridge.closeModal();
     if (window.pomodoro) window.pomodoro.closeDrawer();
+  }
+
+  // --- MCP STUDIO TABS ---
+  switchMcpTab(tabName) {
+    const tabs = ['connect', 'sync', 'playground', 'directory'];
+    tabs.forEach(t => {
+      const panel = document.getElementById(`mcp-tab-${t}`);
+      if (panel) panel.classList.toggle('active', t === tabName);
+    });
+
+    const buttons = document.querySelectorAll('.mcp-tab-btn');
+    buttons.forEach((btn, idx) => {
+      btn.classList.toggle('active', tabs[idx] === tabName);
+    });
+
+    if (tabName === 'playground' && window.mcpBridge) {
+      window.mcpBridge.renderPlaygroundSchema();
+    }
   }
 
   // --- THEME MANAGEMENT ---

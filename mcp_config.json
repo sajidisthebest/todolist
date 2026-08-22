@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "taskflow": {
+      "command": "py",
+      "args": ["-3", "mcp-server/server.py", "--stdio"],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "taskflow-node": {
+      "command": "node",
+      "args": ["mcp-server/server.js", "--stdio"]
+    },
+    "taskflow-remote": {
+      "serverUrl": "http://localhost:3333/sse"
+    }
+  }
+}

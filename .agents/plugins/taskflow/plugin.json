@@ -1,0 +1,8 @@
+{
+  "name": "taskflow",
+  "displayName": "TaskFlow Pro MCP Server",
+  "version": "1.0.0",
+  "description": "Connect AI models (Google Spark, Antigravity, Claude, Cursor) directly to TaskFlow Pro to manage tasks, kanban columns, due dates, and focus analytics.",
+  "author": "TaskFlow Pro",
+  "skills": ["skills/taskflow"]
+}
