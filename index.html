@@ -1526,16 +1526,21 @@
               <div class="mcp-client-header">
                 <div class="mcp-client-logo spark">✨</div>
                 <div>
-                  <h4>Google Spark / Cloud AI</h4>
-                  <span class="mcp-client-tag">Cloud HTTPS Endpoint</span>
+                  <h4>Google Gemini &amp; Spark</h4>
+                  <span class="mcp-client-tag">OAuth 2.0 + HTTPS MCP</span>
                 </div>
               </div>
-              <p class="mcp-client-desc">Connect Google Spark or any cloud AI agent directly using your live Netlify serverless endpoint.</p>
+              <p class="mcp-client-desc">Connect Gemini / Spark with built-in standard OAuth 2.0 &amp; RFC 8414 discovery.</p>
               <div class="mcp-code-preview">
                 <code id="mcp-spark-endpoint-preview">https://sajidxtodo.netlify.app/api/mcp</code>
               </div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; background: rgba(0,0,0,0.25); padding: 8px; border-radius: var(--radius-xs);">
+                <div><b>Auth URL:</b> <code>https://sajidxtodo.netlify.app/oauth/authorize</code></div>
+                <div><b>Token URL:</b> <code>https://sajidxtodo.netlify.app/oauth/token</code></div>
+                <div><b>Client ID:</b> <code>taskflow-gemini</code> | <b>Secret:</b> <code>taskflow-secret</code></div>
+              </div>
               <button class="btn btn-secondary btn-sm" onclick="window.mcpBridge.copyConfig('google-spark')">
-                <span>📋 Copy Spark Config JSON</span>
+                <span>📋 Copy Gemini Config JSON</span>
               </button>
             </div>
 

@@ -27,18 +27,16 @@ When running, the server exposes:
 
 ## 🔌 Connecting to AI Apps
 
-### 1. Google Spark / Remote SSE Clients
-Configure your client to point to the SSE URL:
-```json
-{
-  "mcpServers": {
-    "taskflow": {
-      "serverUrl": "http://localhost:3333/sse",
-      "transport": "sse"
-    }
-  }
-}
-```
+### 1. Google Gemini & Google Spark (Cloud OAuth 2.0)
+Google Gemini connects to custom MCP servers via standard OAuth 2.0:
+- **Server Endpoint URL**: `https://sajidxtodo.netlify.app/api/mcp`
+- **RFC 8414 Auto-Discovery**: `https://sajidxtodo.netlify.app/.well-known/oauth-authorization-server`
+- **Advanced Settings (if prompted)**:
+  - **Authorization URL**: `https://sajidxtodo.netlify.app/oauth/authorize`
+  - **Token URL**: `https://sajidxtodo.netlify.app/oauth/token`
+  - **Client ID**: `taskflow-gemini`
+  - **Client Secret**: `taskflow-secret`
+  - **Scopes**: `read write tasks`
 
 ### 2. Google Antigravity
 The workspace plugin is pre-configured in `.agents/plugins/taskflow/` and `.agents/mcp_config.json`:

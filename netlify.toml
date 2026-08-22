@@ -2,6 +2,49 @@
   publish = "."
   functions = "netlify/functions"
 
+# OAuth 2.0 RFC 8414 Discovery for Google Gemini
+[[redirects]]
+  from = "/.well-known/oauth-authorization-server"
+  to = "/.netlify/functions/well-known"
+  status = 200
+
+[[redirects]]
+  from = "/.well-known/openid-configuration"
+  to = "/.netlify/functions/well-known"
+  status = 200
+
+[[redirects]]
+  from = "/.well-known/oauth-protected-resource"
+  to = "/.netlify/functions/well-known"
+  status = 200
+
+# OAuth Endpoints
+[[redirects]]
+  from = "/oauth/authorize"
+  to = "/.netlify/functions/oauth"
+  status = 200
+
+[[redirects]]
+  from = "/oauth/token"
+  to = "/.netlify/functions/oauth"
+  status = 200
+
+[[redirects]]
+  from = "/oauth/userinfo"
+  to = "/.netlify/functions/oauth"
+  status = 200
+
+[[redirects]]
+  from = "/oauth/jwks"
+  to = "/.netlify/functions/oauth"
+  status = 200
+
+[[redirects]]
+  from = "/oauth/*"
+  to = "/.netlify/functions/oauth"
+  status = 200
+
+# MCP Endpoints
 [[redirects]]
   from = "/api/mcp"
   to = "/.netlify/functions/mcp"
@@ -27,6 +70,7 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -45,6 +89,20 @@
 
 [[headers]]
   for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, x-session-id"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+[[headers]]
+  for = "/oauth/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, x-session-id"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+[[headers]]
+  for = "/.well-known/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Headers = "Content-Type, Authorization, x-session-id"
